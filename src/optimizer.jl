@@ -213,7 +213,6 @@ function optimize_grid(grid::Grid)
             optimize!(model)
 
             if termination_status(model) != MOI.OPTIMAL
-                println("No feasible solution found after blocking a loop.")
                 break
             end
 

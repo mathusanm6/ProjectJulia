@@ -12,8 +12,6 @@ julia --project=. -e 'using Pkg; Pkg.add(["JuMP", "HiGHS", "Test", "JuliaFormatt
 julia --project=. main.jl
 ```
 
-julia --project=. -e 'using JuliaFormatter; format(".", verbose=true)'
-
 ## Running Tests
 
 To run the tests for this project, execute the following command in your terminal:
@@ -23,3 +21,9 @@ julia --project=. -e "using Pkg; Pkg.test()"
 ```
 
 This will ensure that all tests are executed within the current project environment.
+
+## Formatting Code
+
+```bash
+julia --project=. -e 'using JuliaFormatter; format(".", verbose=true)'
+```
