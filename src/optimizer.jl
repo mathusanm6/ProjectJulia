@@ -114,7 +114,7 @@ Optimizes the given grid using a mixed-integer programming model.
 
 Returns the optimized grid with entry and exit directions for each cell.
 """
-function optimize_grid(grid::Grid)
+function optimize_grid(grid::Grid, remove_sub_loops=true)
     model = Model(HiGHS.Optimizer)
     N = grid.size
 
@@ -235,7 +235,7 @@ function optimize_grid(grid::Grid)
     )
 
     if termination_status(model) == MOI.OPTIMAL
-        while true
+        while remove_sub_loops
             sub_loops = detect_all_sub_loops(grid.circuit)
             if isempty(sub_loops)
                 println("No sub-loops detected.")
