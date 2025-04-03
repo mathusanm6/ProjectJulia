@@ -22,10 +22,11 @@ function check_valid_cell(cell::Cell)
     entry_valid = check_valid_port(cell.entry)
     exit_valid = check_valid_port(cell.exit)
     # Check if the entry and exit ports are not connected to the same side
-    entry_exit_connected = (cell.entry.top && cell.exit.top) ||
-                           (cell.entry.right && cell.exit.right) ||
-                           (cell.entry.bottom && cell.exit.bottom) ||
-                           (cell.entry.left && cell.exit.left)
+    entry_exit_connected =
+        (cell.entry.top && cell.exit.top) ||
+        (cell.entry.right && cell.exit.right) ||
+        (cell.entry.bottom && cell.exit.bottom) ||
+        (cell.entry.left && cell.exit.left)
     return entry_valid && exit_valid && !entry_exit_connected
 end
 
@@ -37,7 +38,7 @@ end
 """
 function check_valid_circuit(circuit::Circuit)
     # Check if all cells in the circuit are valid
-    for i in 1:size(circuit.grid, 1), j in 1:size(circuit.grid, 2)
+    for i = 1:size(circuit.grid, 1), j = 1:size(circuit.grid, 2)
         cell = circuit.grid[i, j]
         if !check_valid_cell(cell)
             return false
@@ -70,18 +71,22 @@ function check_valid_circuit(circuit::Circuit)
     end
 
     # Start DFS from a non-empty cell
-    for i in 1:size(circuit.grid, 1), j in 1:size(circuit.grid, 2)
-        if circuit.grid[i, j].entry.top || circuit.grid[i, j].entry.right ||
-           circuit.grid[i, j].entry.bottom || circuit.grid[i, j].entry.left
+    for i = 1:size(circuit.grid, 1), j = 1:size(circuit.grid, 2)
+        if circuit.grid[i, j].entry.top ||
+           circuit.grid[i, j].entry.right ||
+           circuit.grid[i, j].entry.bottom ||
+           circuit.grid[i, j].entry.left
             dfs(i, j)
             break
         end
     end
 
     # Check if all cells non-empty cells are visited
-    for i in 1:size(circuit.grid, 1), j in 1:size(circuit.grid, 2)
-        if circuit.grid[i, j].entry.top || circuit.grid[i, j].entry.right ||
-           circuit.grid[i, j].entry.bottom || circuit.grid[i, j].entry.left
+    for i = 1:size(circuit.grid, 1), j = 1:size(circuit.grid, 2)
+        if circuit.grid[i, j].entry.top ||
+           circuit.grid[i, j].entry.right ||
+           circuit.grid[i, j].entry.bottom ||
+           circuit.grid[i, j].entry.left
             if !visited[i, j]
                 return false
             end
@@ -104,20 +109,26 @@ function check_valid_grid(grid::Grid)
     end
 
     # Check if the number of non-empty cells in each row matches the constraints
-    for i in 1:grid.size
-        num_non_empty_cells = sum([grid.circuit.grid[i, j].entry.top || grid.circuit.grid[i, j].entry.right ||
-                                   grid.circuit.grid[i, j].entry.bottom || grid.circuit.grid[i, j].entry.left
-                                   for j in 1:grid.size])
+    for i = 1:grid.size
+        num_non_empty_cells = sum([
+            grid.circuit.grid[i, j].entry.top ||
+            grid.circuit.grid[i, j].entry.right ||
+            grid.circuit.grid[i, j].entry.bottom ||
+            grid.circuit.grid[i, j].entry.left for j = 1:grid.size
+        ])
         if num_non_empty_cells != grid.row_constraints[i]
             return false
         end
     end
 
     # Check if the number of non-empty cells in each column matches the constraints
-    for j in 1:grid.size
-        num_non_empty_cells = sum([grid.circuit.grid[i, j].entry.top || grid.circuit.grid[i, j].entry.right ||
-                                   grid.circuit.grid[i, j].entry.bottom || grid.circuit.grid[i, j].entry.left
-                                   for i in 1:grid.size])
+    for j = 1:grid.size
+        num_non_empty_cells = sum([
+            grid.circuit.grid[i, j].entry.top ||
+            grid.circuit.grid[i, j].entry.right ||
+            grid.circuit.grid[i, j].entry.bottom ||
+            grid.circuit.grid[i, j].entry.left for i = 1:grid.size
+        ])
         if num_non_empty_cells != grid.column_constraints[j]
             return false
         end

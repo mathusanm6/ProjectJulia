@@ -1,10 +1,18 @@
 # Project Julia
 
+# Installation
+
+```bash
+julia --project=. -e 'using Pkg; Pkg.add(["JuMP", "HiGHS", "Test", "JuliaFormatter"])'
+```
+
 ## Running the Project
 
 ```bash
 julia --project=. main.jl
 ```
+
+julia --project=. -e 'using JuliaFormatter; format(".", verbose=true)'
 
 ## Running Tests
 

@@ -19,7 +19,7 @@ mutable struct Circuit
 
     function Circuit(matrix_size::Int)
         grid = Array{Cell,2}(undef, matrix_size, matrix_size)
-        for i in 1:matrix_size, j in 1:matrix_size
+        for i = 1:matrix_size, j = 1:matrix_size
             grid[i, j] = Cell(Port(0, 0, 0, 0), Port(0, 0, 0, 0))
         end
         new(grid)
@@ -32,7 +32,12 @@ mutable struct Grid
     row_constraints::Vector{Int}
     column_constraints::Vector{Int}
 
-    function Grid(size::Int64, circuit::Circuit, row_constraints::Vector{Int}, column_constraints::Vector{Int})
+    function Grid(
+        size::Int64,
+        circuit::Circuit,
+        row_constraints::Vector{Int},
+        column_constraints::Vector{Int},
+    )
         new(size, circuit, row_constraints, column_constraints)
     end
 end
@@ -51,10 +56,10 @@ function show(io::IO, ::MIME"text/plain", grid::Grid)
     print(io, "\n")
 
     # For each row
-    for i in 1:n
+    for i = 1:n
         # Top border of cells
         print(io, "     ")
-        for _ in 1:n
+        for _ = 1:n
             print(io, "+---+")
         end
         print(io, "\n")
@@ -63,7 +68,7 @@ function show(io::IO, ::MIME"text/plain", grid::Grid)
         print(io, "     ")
 
         # Print cells (top)
-        for j in 1:n
+        for j = 1:n
             cell = circuit.grid[i, j]
             if cell.entry.top || cell.exit.top
                 print(io, "| * |")
@@ -77,11 +82,12 @@ function show(io::IO, ::MIME"text/plain", grid::Grid)
         print(io, "  $(rows[i])  ")
 
         # Print cells (middle)
-        for j in 1:n
+        for j = 1:n
             cell = circuit.grid[i, j]
             if (cell.entry.right && cell.exit.left) || (cell.entry.left && cell.exit.right)
                 print(io, "|***|")
-            elseif (cell.entry.top && cell.exit.bottom) || (cell.entry.bottom && cell.exit.top)
+            elseif (cell.entry.top && cell.exit.bottom) ||
+                   (cell.entry.bottom && cell.exit.top)
                 print(io, "| * |")
             elseif cell.entry.right || cell.exit.right
                 print(io, "| **|")
@@ -97,7 +103,7 @@ function show(io::IO, ::MIME"text/plain", grid::Grid)
         print(io, "     ")
 
         # Print cells (bottom)
-        for j in 1:n
+        for j = 1:n
             cell = circuit.grid[i, j]
             if cell.entry.bottom || cell.exit.bottom
                 print(io, "| * |")
@@ -110,7 +116,7 @@ function show(io::IO, ::MIME"text/plain", grid::Grid)
 
     # Bottom border
     print(io, "     ")
-    for _ in 1:n
+    for _ = 1:n
         print(io, "+---+")
     end
     print(io, "\n")

@@ -6,11 +6,13 @@ version = "0.1.0"
 [deps]
 HiGHS = "87dc4568-4c63-4d18-b0c0-bb2238e4078b"
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 MathOptInterface = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 HiGHS = "1.15.0"
 JuMP = "1.25.0"
+JuliaFormatter = "1.0.62"
 MathOptInterface = "1.38.0"
 Test = "1.11.0"

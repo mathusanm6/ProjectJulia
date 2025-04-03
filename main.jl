@@ -1,7 +1,8 @@
 #!/usr/bin/env julia
 
 using ProjectJulia
-using ProjectJulia.examples: example_one
+using ProjectJulia.examples:
+    example_one, example_two, example_three, example_four, example_five, example_six
 using ProjectJulia.optimizer: optimize_grid
 
 
