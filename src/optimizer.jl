@@ -60,7 +60,7 @@ function detect_all_sub_loops(circuit::Circuit)
         return vcat(path[min_idx:end], path[1:min_idx-1])
     end
 
-    function dfs(i, j, path, visited, from_dir=nothing)
+    function dfs(i, j, path, visited, from_dir = nothing)
         cell = circuit.grid[i, j]
         push!(path, (i, j))
         push!(visited, (i, j))
@@ -114,7 +114,7 @@ Optimizes the given grid using a mixed-integer programming model.
 
 Returns the optimized grid with entry and exit directions for each cell.
 """
-function optimize_grid(grid::Grid, remove_sub_loops=true)
+function optimize_grid(grid::Grid, remove_sub_loops = true)
     model = Model(HiGHS.Optimizer)
     N = grid.size
 
