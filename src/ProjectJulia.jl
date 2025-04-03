@@ -9,6 +9,7 @@ using .types
 export Port, Cell, Circuit, Grid
 
 using .examples
+export example_one, example_two, example_three, example_four, example_five, example_six
 export example_grid_valid, example_grid_invalid
 
 using .validator

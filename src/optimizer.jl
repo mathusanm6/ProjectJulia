@@ -5,6 +5,12 @@ import MathOptInterface as MOI
 
 using ..types: Grid, Circuit, Cell, Port
 
+"""
+    apply_solution!(grid, entry_top, entry_right, entry_bottom, entry_left, exit_top, exit_right, exit_bottom, exit_left)
+
+Applies the solution from the optimization model to the grid.
+Float values are rounded to the nearest integer (0 or 1) to determine the entry and exit directions for each cell.
+"""
 function apply_solution!(
     grid,
     entry_top,
@@ -30,6 +36,15 @@ function apply_solution!(
     end
 end
 
+
+"""
+    detect_all_sub_loops(circuit::Circuit)
+
+Detects all sub-loops in a given circuit.
+
+Returns a list of loops, where each loop is represented as a vector of tuples `(i, j)` 
+indicating the coordinates of the cells in the loop.
+"""
 function detect_all_sub_loops(circuit::Circuit)
     loops = []
     seen_signatures = Set{Vector{Tuple{Int,Int}}}()
@@ -45,7 +60,7 @@ function detect_all_sub_loops(circuit::Circuit)
         return vcat(path[min_idx:end], path[1:min_idx-1])
     end
 
-    function dfs(i, j, path, visited, from_dir = nothing)
+    function dfs(i, j, path, visited, from_dir=nothing)
         cell = circuit.grid[i, j]
         push!(path, (i, j))
         push!(visited, (i, j))
@@ -92,10 +107,18 @@ function detect_all_sub_loops(circuit::Circuit)
     return loops
 end
 
+"""
+    optimize_grid(grid::Grid)
+    
+Optimizes the given grid using a mixed-integer programming model.
+
+Returns the optimized grid with entry and exit directions for each cell.
+"""
 function optimize_grid(grid::Grid)
     model = Model(HiGHS.Optimizer)
     N = grid.size
 
+    # Define binary decision variables for entry and exit directions at each cell
     @variable(model, entry_top[1:N, 1:N], Bin)
     @variable(model, entry_right[1:N, 1:N], Bin)
     @variable(model, entry_bottom[1:N, 1:N], Bin)
@@ -105,6 +128,9 @@ function optimize_grid(grid::Grid)
     @variable(model, exit_bottom[1:N, 1:N], Bin)
     @variable(model, exit_left[1:N, 1:N], Bin)
 
+    ## == Constraints == ##
+
+    # Ensure each row has the specified number of non-empty cells
     for i = 1:N
         @constraint(
             model,
@@ -115,6 +141,7 @@ function optimize_grid(grid::Grid)
         )
     end
 
+    # Ensure each column has the specified number of non-empty cells
     for j = 1:N
         @constraint(
             model,
@@ -125,20 +152,28 @@ function optimize_grid(grid::Grid)
         )
     end
 
+
     for i = 1:N, j = 1:N
+        # A cell can have at most one entry direction
         @constraint(
             model,
             entry_top[i, j] + entry_right[i, j] + entry_bottom[i, j] + entry_left[i, j] <=
             1
         )
+
+        # A cell can have at most one exit direction
         @constraint(
             model,
             exit_top[i, j] + exit_right[i, j] + exit_bottom[i, j] + exit_left[i, j] <= 1
         )
+
+        # Entry and exit cannot be in the same direction at a cell
         @constraint(model, entry_top[i, j] + exit_top[i, j] <= 1)
         @constraint(model, entry_right[i, j] + exit_right[i, j] <= 1)
         @constraint(model, entry_bottom[i, j] + exit_bottom[i, j] <= 1)
         @constraint(model, entry_left[i, j] + exit_left[i, j] <= 1)
+
+        # A cell must have an equal number of entry and exit directions (0 or 1)
         @constraint(
             model,
             entry_top[i, j] + entry_right[i, j] + entry_bottom[i, j] + entry_left[i, j] ==
@@ -147,28 +182,41 @@ function optimize_grid(grid::Grid)
     end
 
     for i = 1:N, j = 1:N
+        # Enforce connectivity between adjacent cells:
+        # A top exit in cell (i, j) must match the bottom entry in (i-1, j)
         if i > 1
             @constraint(model, exit_top[i, j] == entry_bottom[i-1, j])
         else
+            # No top neighbor — no top exit
             @constraint(model, exit_top[i, j] == 0)
         end
-        if i < N
-            @constraint(model, exit_bottom[i, j] == entry_top[i+1, j])
-        else
-            @constraint(model, exit_bottom[i, j] == 0)
-        end
-        if j > 1
-            @constraint(model, exit_left[i, j] == entry_right[i, j-1])
-        else
-            @constraint(model, exit_left[i, j] == 0)
-        end
+
+        # A right exit in cell (i, j) must match the left entry in (i, j+1)
         if j < N
             @constraint(model, exit_right[i, j] == entry_left[i, j+1])
         else
+            # No right neighbor — no right exit
             @constraint(model, exit_right[i, j] == 0)
+        end
+
+        # A bottom exit in cell (i, j) must match the top entry in (i+1, j)
+        if i < N
+            @constraint(model, exit_bottom[i, j] == entry_top[i+1, j])
+        else
+            # No bottom neighbor — no bottom exit
+            @constraint(model, exit_bottom[i, j] == 0)
+        end
+
+        # A left exit in cell (i, j) must match the right entry in (i, j-1)
+        if j > 1
+            @constraint(model, exit_left[i, j] == entry_right[i, j-1])
+        else
+            # No left neighbor — no left exit
+            @constraint(model, exit_left[i, j] == 0)
         end
     end
 
+    # Dummy objective since we are solving a feasibility problem
     @objective(model, Min, 0)
 
     set_silent(model)
@@ -194,7 +242,7 @@ function optimize_grid(grid::Grid)
                 break
             end
 
-            # Only block the first detected loop
+            # # Add a constraint to break the first detected sub-loop
             loop = sub_loops[1]
             @constraint(
                 model,
@@ -232,5 +280,7 @@ function optimize_grid(grid::Grid)
 
     return grid
 end
+
+export optimize_grid
 
 end # module optimizer
