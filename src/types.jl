@@ -42,6 +42,19 @@ mutable struct Grid
     end
 end
 
+function generate_next_constraints(size::Int, prev_constraints::Vector{Int})
+    for i in 1:size
+        if prev_constraints[i] < size
+            prev_constraints[i] += 1
+            for j in 1:i-1
+                prev_constraints[j] = 0
+            end
+            return prev_constraints
+        end
+    end
+    return nothing
+end
+
 function show(io::IO, ::MIME"text/plain", grid::Grid)
     n = grid.size
     rows = grid.row_constraints
@@ -123,5 +136,6 @@ function show(io::IO, ::MIME"text/plain", grid::Grid)
 end
 
 export Port, Cell, Circuit, Grid
+export generate_next_constraints
 
 end # module types
