@@ -21,6 +21,6 @@ using .optimizer
 export optimize_grid
 
 using .generator
-export generate_all_solvable_grids
+export generate_random_solvable_grid, generate_all_solvable_grids
 
 end # module ProjectJulia

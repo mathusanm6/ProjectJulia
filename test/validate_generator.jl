@@ -11,15 +11,14 @@ using ProjectJulia.generator: generate_all_solvable_grids
     
     println("Generated ", length(grids), " solvable grids of size 3.")
     for (original_grid, solved_grid) in grids
-        println("Original Grid:")
-        display(original_grid)
+        # println("Original Grid:")
+        # display(original_grid)
         
-        println("Solved Grid:")
-        display(solved_grid)
+        # println("Solved Grid:")
+        # display(solved_grid)
 
-        println("Is the solved grid valid? ", check_valid_grid(solved_grid))
-        println()
+        # println("Is the solved grid valid? ", check_valid_grid(solved_grid))
+        # println()
         @test check_valid_grid(solved_grid) == true
     end
-    println("=========================")
 end
