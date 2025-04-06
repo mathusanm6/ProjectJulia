@@ -9,48 +9,48 @@ using ProjectJulia.validator: check_valid_grid
 @testset "Validate Optimizer Test Example One" begin
     grid = example_one()
     optimized_grid = optimize_grid(grid)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == true
 end
 
 @testset "Validate Optimizer Test Example Two" begin
     grid = example_two()
     optimized_grid = optimize_grid(grid)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == true
 end
 
 @testset "Validate Optimizer Test Example Three" begin
     grid = example_three()
     optimized_grid = optimize_grid(grid)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == true
 end
 
 @testset "Validate Optimizer Test Example Four" begin
     grid = example_four()
     optimized_grid = optimize_grid(grid)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == true
 end
 
 @testset "Validate Optimizer Test Example Five" begin
     grid = example_five()
     optimized_grid = optimize_grid(grid)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == true
 end
 
 @testset "Validate Optimizer Test Example Six" begin
     grid = example_six()
     optimized_grid = optimize_grid(grid)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == true
 end
 
 @testset "Invalidate Optimizer Test Example Six With Sub-loops" begin
     grid = example_six()
     optimized_grid = optimize_grid(grid, false)
-    # display(optimized_grid)
+    display(optimized_grid)
     @test check_valid_grid(optimized_grid) == false
 end
