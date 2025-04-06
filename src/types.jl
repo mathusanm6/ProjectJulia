@@ -43,10 +43,10 @@ mutable struct Grid
 end
 
 function generate_next_constraints(size::Int, prev_constraints::Vector{Int})
-    for i in 1:size
+    for i = 1:size
         if prev_constraints[i] < size
             prev_constraints[i] += 1
-            for j in 1:i-1
+            for j = 1:i-1
                 prev_constraints[j] = 0
             end
             return prev_constraints

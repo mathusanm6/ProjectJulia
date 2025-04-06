@@ -72,7 +72,7 @@ function run_generation_all(size::Int)
     println("=========================")
 end
 
-function run_random_generation(size::Int, seed::Union{Nothing,Int}=nothing)
+function run_random_generation(size::Int, seed::Union{Nothing,Int} = nothing)
     println("Generating Random Solvable Grid...")
     original_grid, solved_grid = generate_random_solvable_grid(size, seed)
     println("Original Grid:")

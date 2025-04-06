@@ -15,14 +15,14 @@ Generates a random solvable grid of a given size.
 
 Returns a tuple containing the original grid and the solved grid.
 """
-function generate_random_solvable_grid(size::Int, seed::Union{Nothing,Int}=nothing)
+function generate_random_solvable_grid(size::Int, seed::Union{Nothing,Int} = nothing)
     if !isnothing(seed)
         Random.seed!(seed)
     else
         Random.seed!(42)  # Default seed for reproducibility
     end
 
-    already_tested_combinations = Set{Tuple{Vector{Int}, Vector{Int}}}()
+    already_tested_combinations = Set{Tuple{Vector{Int},Vector{Int}}}()
 
     while true
         row_constraints = rand(0:size, size)
@@ -32,7 +32,8 @@ function generate_random_solvable_grid(size::Int, seed::Union{Nothing,Int}=nothi
         if (row_constraints, column_constraints) in already_tested_combinations
             continue
         end
-        already_tested_combinations = push!(already_tested_combinations, (row_constraints, column_constraints))
+        already_tested_combinations =
+            push!(already_tested_combinations, (row_constraints, column_constraints))
 
         circuit = Circuit(size)
         grid = Grid(size, circuit, copy(row_constraints), copy(column_constraints))
